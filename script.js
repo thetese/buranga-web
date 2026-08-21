@@ -6,13 +6,13 @@ document.head.appendChild(brandStyles);
 const headerBrand = document.querySelector('.site-header .brand');
 if (headerBrand) {
   headerBrand.classList.add('brand--official');
-  headerBrand.innerHTML = '<img class="brand-logo" src="assets/buhanga-logo.webp" alt="Buhanga Eco Lodge" width="1000" height="500">';
+  headerBrand.innerHTML = '<img class="brand-logo" src="/assets/buhanga-logo.svg" alt="Buhanga Eco Lodge">';
 }
 
 const footerBrand = document.querySelector('.footer-brand');
 if (footerBrand) {
   footerBrand.classList.add('footer-brand--official');
-  footerBrand.innerHTML = '<img class="footer-logo" src="assets/buhanga-logo.webp" alt="Buhanga Eco Lodge" width="1000" height="500">';
+  footerBrand.innerHTML = '<img class="footer-logo" src="/assets/buhanga-logo.svg" alt="Buhanga Eco Lodge">';
 }
 
 const menuButton = document.querySelector('.menu-button');
