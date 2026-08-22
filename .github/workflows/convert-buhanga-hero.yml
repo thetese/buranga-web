@@ -1,0 +1,46 @@
+name: Convert Buhanga hero
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/convert-buhanga-hero.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Convert AVIF to JPEG
+        run: |
+          ffmpeg -y -i assets/buhanga-hero.avif -frames:v 1 -q:v 2 assets/buhanga-hero.jpg
+      - name: Validate converted image
+        run: |
+          python - <<'PY'
+          from PIL import Image, ImageStat
+          im = Image.open('assets/buhanga-hero.jpg').convert('RGB')
+          s = ImageStat.Stat(im)
+          print('size:', im.size)
+          print('mean:', [round(x,2) for x in s.mean])
+          print('stddev:', [round(x,2) for x in s.stddev])
+          PY
+      - name: Point hero CSS to JPEG
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('brand.css')
+          s=p.read_text()
+          s=s.replace("/assets/buhanga-hero.avif", "/assets/buhanga-hero.jpg")
+          p.write_text(s)
+          PY
+      - name: Commit converted hero
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/buhanga-hero.jpg brand.css
+          git commit -m 'fix: serve Buhanga hero as JPEG'
+          git push
